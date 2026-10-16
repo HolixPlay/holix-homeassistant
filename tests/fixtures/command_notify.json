@@ -1,0 +1,10 @@
+{
+  "type": "command",
+  "id": 12,
+  "command": "notify",
+  "args": {
+    "title": "Doorbell",
+    "message": "Someone is at the door",
+    "duration": 8
+  }
+}

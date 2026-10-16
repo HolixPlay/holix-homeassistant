@@ -1,0 +1,22 @@
+show_notification:
+  target:
+    entity:
+      integration: holix
+      domain: media_player
+  fields:
+    message:
+      required: true
+      example: "Someone is at the door"
+      selector:
+        text:
+    title:
+      example: "Doorbell"
+      selector:
+        text:
+    duration:
+      default: 8
+      selector:
+        number:
+          min: 1
+          max: 60
+          unit_of_measurement: s

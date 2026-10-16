@@ -1,0 +1,9 @@
+{
+  "type": "command",
+  "id": 11,
+  "command": "set_ambilight",
+  "args": {
+    "on": true,
+    "brightness": 0.5
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "event",
+  "event": "segment_started",
+  "ts": 1792152000500,
+  "data": {
+    "segment": "outro",
+    "item": {
+      "id": "0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+      "type": "episode",
+      "title": "Ozymandias",
+      "series_title": "Breaking Bad",
+      "season": 5,
+      "episode": 14,
+      "year": 2013,
+      "official_rating": "TV-MA",
+      "image_url": null
+    }
+  }
+}

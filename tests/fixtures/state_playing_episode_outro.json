@@ -1,0 +1,72 @@
+{
+  "type": "state",
+  "state": {
+    "playback": {
+      "state": "playing",
+      "position": 1834.2,
+      "duration": 9960.0,
+      "position_at": 1792152000123,
+      "rate": 1.0,
+      "item": {
+        "id": "0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+        "type": "episode",
+        "title": "Ozymandias",
+        "series_title": "Breaking Bad",
+        "season": 5,
+        "episode": 14,
+        "year": 2013,
+        "official_rating": "TV-MA",
+        "image_url": null
+      },
+      "video": {
+        "dynamic_range": "hdr10",
+        "width": 3840,
+        "height": 2160,
+        "codec": "hevc",
+        "frame_rate": 23.976
+      },
+      "audio": {
+        "codec": "truehd",
+        "channels": 8,
+        "spatial": true,
+        "language": "eng"
+      },
+      "subtitle": {
+        "language": "tur",
+        "forced": false
+      },
+      "segment": "outro",
+      "play_method": "direct_play",
+      "volume": null,
+      "muted": false
+    },
+    "profile": {
+      "id": "p-alex",
+      "name": "Alex",
+      "kind": "adult"
+    },
+    "profiles": [
+      {
+        "id": "p-alex",
+        "name": "Alex",
+        "kind": "adult"
+      },
+      {
+        "id": "p-kids",
+        "name": "Kids",
+        "kind": "child"
+      },
+      {
+        "id": "p-guest",
+        "name": "Guest",
+        "kind": "guest"
+      }
+    ],
+    "ambilight": {
+      "on": false,
+      "brightness": 0.8,
+      "targets": 1
+    },
+    "screensaver": false
+  }
+}

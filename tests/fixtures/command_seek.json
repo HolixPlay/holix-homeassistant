@@ -1,0 +1,8 @@
+{
+  "type": "command",
+  "id": 9,
+  "command": "seek",
+  "args": {
+    "position": 600
+  }
+}

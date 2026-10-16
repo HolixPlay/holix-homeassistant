@@ -1,0 +1,9 @@
+{
+  "type": "result",
+  "id": 2,
+  "success": false,
+  "error": {
+    "code": "invalid_pin",
+    "message": "4 attempts left"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "result",
+  "id": 1,
+  "success": true,
+  "result": {
+    "pin_length": 6,
+    "expires_in": 120
+  }
+}

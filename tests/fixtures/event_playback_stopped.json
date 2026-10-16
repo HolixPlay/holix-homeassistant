@@ -1,0 +1,21 @@
+{
+  "type": "event",
+  "event": "playback_stopped",
+  "ts": 1792152000999,
+  "data": {
+    "item": {
+      "id": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+      "type": "movie",
+      "title": "Dune: Part Two",
+      "series_title": null,
+      "season": null,
+      "episode": null,
+      "year": 2024,
+      "official_rating": "PG-13",
+      "image_url": "https://jf.example.net/Items/a1b2c3d4e5f60718293a4b5c6d7e8f90/Images/Primary?tag=abc"
+    },
+    "position": 9950.0,
+    "duration": 9960.0,
+    "reason": "ended"
+  }
+}

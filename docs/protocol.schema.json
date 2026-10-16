@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://holixplay.com/schema/hlcp-v1.json",
+  "title": "Holix Local Control Protocol v1 — all messages",
+  "description": "Every WebSocket text frame conforms to this schema. Unknown extra fields are allowed (forward compatibility).",
+  "oneOf": [
+    {"$ref": "#/$defs/hello"},
+    {"$ref": "#/$defs/pair_start"},
+    {"$ref": "#/$defs/pair_finish"},
+    {"$ref": "#/$defs/auth"},
+    {"$ref": "#/$defs/command"},
+    {"$ref": "#/$defs/subscribe_colors"},
+    {"$ref": "#/$defs/unsubscribe_colors"},
+    {"$ref": "#/$defs/ping"},
+    {"$ref": "#/$defs/pong"},
+    {"$ref": "#/$defs/result"},
+    {"$ref": "#/$defs/state_msg"},
+    {"$ref": "#/$defs/event_msg"},
+    {"$ref": "#/$defs/colors"}
+  ],
+  "$defs": {
+    "id": {"type": "integer", "minimum": 1},
+    "b64url": {"type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
+    "rgb": {"type": "array", "items": {"type": "integer", "minimum": 0, "maximum": 255}, "minItems": 3, "maxItems": 3},
+    "unit": {"type": "number", "minimum": 0, "maximum": 1},
+    "epoch_ms": {"type": "integer", "minimum": 0},
+    "platform": {"enum": ["tvos", "ios", "ipados", "macos", "visionos", "android", "androidtv", "harmonyos", "windows"]},
+    "capability": {"type": "string", "description": "Known values: playback volume profiles ambilight colors notify keys play_item"},
+
+    "device": {
+      "type": "object",
+      "required": ["id", "name", "model", "platform", "app_version"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1, "maxLength": 63},
+        "model": {"type": "string"},
+        "platform": {"$ref": "#/$defs/platform"},
+        "app_version": {"type": "string"}
+      }
+    },
+    "item": {
+      "type": "object",
+      "required": ["id", "type", "title", "series_title", "season", "episode", "year", "official_rating", "image_url"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {"enum": ["movie", "episode", "trailer", "music_video", "live_tv", "audio", "video", "other"]},
+        "title": {"type": "string"},
+        "series_title": {"type": ["string", "null"]},
+        "season": {"type": ["integer", "null"]},
+        "episode": {"type": ["integer", "null"]},
+        "year": {"type": ["integer", "null"]},
+        "official_rating": {"type": ["string", "null"]},
+        "image_url": {"type": ["string", "null"], "format": "uri"}
+      }
+    },
+    "video": {
+      "type": "object",
+      "required": ["dynamic_range", "width", "height", "codec", "frame_rate"],
+      "properties": {
+        "dynamic_range": {"enum": ["sdr", "hdr10", "hdr10_plus", "dolby_vision", "hlg"]},
+        "width": {"type": "integer", "minimum": 0},
+        "height": {"type": "integer", "minimum": 0},
+        "codec": {"type": "string"},
+        "frame_rate": {"type": ["number", "null"]}
+      }
+    },
+    "audio": {
+      "type": "object",
+      "required": ["codec", "channels", "spatial", "language"],
+      "properties": {
+        "codec": {"type": "string"},
+        "channels": {"type": "integer", "minimum": 0},
+        "spatial": {"type": "boolean"},
+        "language": {"type": ["string", "null"]}
+      }
+    },
+    "subtitle": {
+      "type": "object",
+      "required": ["language", "forced"],
+      "properties": {"language": {"type": ["string", "null"]}, "forced": {"type": "boolean"}}
+    },
+    "segment": {"enum": ["intro", "outro", "recap", "preview", "commercial", null]},
+    "profile": {
+      "type": "object",
+      "required": ["id", "name", "kind"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["adult", "child", "guest"]}
+      }
+    },
+    "playback": {
+      "type": "object",
+      "required": ["state", "position", "duration", "position_at", "rate", "item", "video", "audio",
+                   "subtitle", "segment", "play_method", "volume", "muted"],
+      "properties": {
+        "state": {"enum": ["idle", "playing", "paused", "buffering"]},
+        "position": {"type": ["number", "null"], "minimum": 0},
+        "duration": {"type": ["number", "null"], "minimum": 0},
+        "position_at": {"oneOf": [{"$ref": "#/$defs/epoch_ms"}, {"type": "null"}]},
+        "rate": {"type": "number"},
+        "item": {"oneOf": [{"$ref": "#/$defs/item"}, {"type": "null"}]},
+        "video": {"oneOf": [{"$ref": "#/$defs/video"}, {"type": "null"}]},
+        "audio": {"oneOf": [{"$ref": "#/$defs/audio"}, {"type": "null"}]},
+        "subtitle": {"oneOf": [{"$ref": "#/$defs/subtitle"}, {"type": "null"}]},
+        "segment": {"$ref": "#/$defs/segment"},
+        "play_method": {"enum": ["direct_play", "direct_stream", "transcode", null]},
+        "volume": {"oneOf": [{"$ref": "#/$defs/unit"}, {"type": "null"}]},
+        "muted": {"type": "boolean"}
+      },
+      "if": {"properties": {"state": {"const": "idle"}}},
+      "then": {"properties": {"item": {"type": "null"}}},
+      "else": {"properties": {"item": {"$ref": "#/$defs/item"}}}
+    },
+    "state": {
+      "type": "object",
+      "required": ["playback", "profile", "profiles", "ambilight", "screensaver"],
+      "properties": {
+        "playback": {"$ref": "#/$defs/playback"},
+        "profile": {"oneOf": [{"$ref": "#/$defs/profile"}, {"type": "null"}]},
+        "profiles": {"type": "array", "items": {"$ref": "#/$defs/profile"}},
+        "ambilight": {"oneOf": [
+          {"type": "object", "required": ["on", "brightness", "targets"],
+           "properties": {"on": {"type": "boolean"}, "brightness": {"$ref": "#/$defs/unit"},
+                          "targets": {"type": "integer", "minimum": 0}}},
+          {"type": "null"}]},
+        "screensaver": {"type": "boolean"}
+      }
+    },
+
+    "hello": {
+      "type": "object",
+      "required": ["type", "proto", "device", "nonce", "capabilities"],
+      "properties": {
+        "type": {"const": "hello"},
+        "proto": {"const": 1},
+        "device": {"$ref": "#/$defs/device"},
+        "nonce": {"allOf": [{"$ref": "#/$defs/b64url"}, {"minLength": 22}]},
+        "capabilities": {"type": "array", "items": {"$ref": "#/$defs/capability"}, "uniqueItems": true}
+      }
+    },
+    "pair_start": {
+      "type": "object",
+      "required": ["type", "id", "client_id", "client_name"],
+      "properties": {
+        "type": {"const": "pair_start"}, "id": {"$ref": "#/$defs/id"},
+        "client_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "client_name": {"type": "string", "minLength": 1, "maxLength": 64}
+      }
+    },
+    "pair_finish": {
+      "type": "object",
+      "required": ["type", "id", "client_id", "pin"],
+      "properties": {
+        "type": {"const": "pair_finish"}, "id": {"$ref": "#/$defs/id"},
+        "client_id": {"type": "string", "minLength": 1}, "pin": {"type": "string", "pattern": "^[0-9]{6}$"}
+      }
+    },
+    "auth": {
+      "type": "object",
+      "required": ["type", "id", "client_id", "hmac"],
+      "properties": {
+        "type": {"const": "auth"}, "id": {"$ref": "#/$defs/id"},
+        "client_id": {"type": "string", "minLength": 1},
+        "hmac": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "command": {
+      "type": "object",
+      "required": ["type", "id", "command"],
+      "properties": {
+        "type": {"const": "command"}, "id": {"$ref": "#/$defs/id"},
+        "command": {"type": "string"},
+        "args": {"type": "object"}
+      },
+      "allOf": [
+        {"if": {"properties": {"command": {"const": "seek"}}},
+         "then": {"properties": {"args": {"required": ["position"], "properties": {"position": {"type": "number", "minimum": 0}}}}, "required": ["args"]}},
+        {"if": {"properties": {"command": {"const": "set_volume"}}},
+         "then": {"properties": {"args": {"required": ["level"], "properties": {"level": {"$ref": "#/$defs/unit"}}}}, "required": ["args"]}},
+        {"if": {"properties": {"command": {"const": "mute"}}},
+         "then": {"properties": {"args": {"required": ["muted"], "properties": {"muted": {"type": "boolean"}}}}, "required": ["args"]}},
+        {"if": {"properties": {"command": {"const": "select_profile"}}},
+         "then": {"properties": {"args": {"required": ["profile_id"], "properties": {"profile_id": {"type": "string"}}}}, "required": ["args"]}},
+        {"if": {"properties": {"command": {"const": "set_ambilight"}}},
+         "then": {"properties": {"args": {"minProperties": 1, "properties": {"on": {"type": "boolean"}, "brightness": {"$ref": "#/$defs/unit"}}}}, "required": ["args"]}},
+        {"if": {"properties": {"command": {"const": "play_item"}}},
+         "then": {"properties": {"args": {"required": ["item_id"], "properties": {"item_id": {"type": "string"}, "position": {"type": "number", "minimum": 0}}}}, "required": ["args"]}},
+        {"if": {"properties": {"command": {"const": "notify"}}},
+         "then": {"properties": {"args": {"required": ["message"], "properties": {"message": {"type": "string"}, "title": {"type": "string"}, "duration": {"type": "integer", "minimum": 1, "maximum": 60}}}}, "required": ["args"]}},
+        {"if": {"properties": {"command": {"const": "key"}}},
+         "then": {"properties": {"args": {"required": ["key"], "properties": {"key": {"enum": ["up", "down", "left", "right", "select", "back", "home", "menu", "play_pause"]}}}}, "required": ["args"]}}
+      ]
+    },
+    "subscribe_colors": {
+      "type": "object",
+      "required": ["type", "id", "fps"],
+      "properties": {"type": {"const": "subscribe_colors"}, "id": {"$ref": "#/$defs/id"},
+                     "fps": {"type": "integer", "minimum": 1, "maximum": 30}}
+    },
+    "unsubscribe_colors": {
+      "type": "object", "required": ["type", "id"],
+      "properties": {"type": {"const": "unsubscribe_colors"}, "id": {"$ref": "#/$defs/id"}}
+    },
+    "ping": {"type": "object", "required": ["type", "id"],
+             "properties": {"type": {"const": "ping"}, "id": {"$ref": "#/$defs/id"}}},
+    "pong": {"type": "object", "required": ["type", "id"],
+             "properties": {"type": {"const": "pong"}, "id": {"$ref": "#/$defs/id"}}},
+    "result": {
+      "type": "object",
+      "required": ["type", "id", "success"],
+      "properties": {
+        "type": {"const": "result"}, "id": {"$ref": "#/$defs/id"}, "success": {"type": "boolean"},
+        "result": {"type": "object"},
+        "error": {
+          "type": "object", "required": ["code"],
+          "properties": {
+            "code": {"enum": ["unauthorized", "invalid_auth", "invalid_pin", "pairing_not_started",
+                              "too_many_attempts", "unknown_type", "unknown_command", "invalid_args",
+                              "not_supported", "not_available", "internal"]},
+            "message": {"type": "string"}
+          }
+        }
+      },
+      "if": {"properties": {"success": {"const": true}}},
+      "then": {"required": ["result"]},
+      "else": {"required": ["error"]}
+    },
+    "state_msg": {
+      "type": "object", "required": ["type", "state"],
+      "properties": {"type": {"const": "state"}, "state": {"$ref": "#/$defs/state"}}
+    },
+    "event_msg": {
+      "type": "object",
+      "required": ["type", "event", "ts", "data"],
+      "properties": {
+        "type": {"const": "event"},
+        "event": {"type": "string"},
+        "ts": {"$ref": "#/$defs/epoch_ms"},
+        "data": {"type": "object"}
+      },
+      "allOf": [
+        {"if": {"properties": {"event": {"const": "playback_started"}}},
+         "then": {"properties": {"data": {"required": ["item", "video", "audio", "profile"],
+           "properties": {"item": {"$ref": "#/$defs/item"},
+                          "video": {"oneOf": [{"$ref": "#/$defs/video"}, {"type": "null"}]},
+                          "audio": {"oneOf": [{"$ref": "#/$defs/audio"}, {"type": "null"}]},
+                          "profile": {"oneOf": [{"$ref": "#/$defs/profile"}, {"type": "null"}]}}}}}},
+        {"if": {"properties": {"event": {"enum": ["playback_paused", "playback_resumed"]}}},
+         "then": {"properties": {"data": {"required": ["item", "position"],
+           "properties": {"item": {"$ref": "#/$defs/item"}, "position": {"type": ["number", "null"]}}}}}},
+        {"if": {"properties": {"event": {"const": "playback_stopped"}}},
+         "then": {"properties": {"data": {"required": ["item", "position", "duration", "reason"],
+           "properties": {"item": {"$ref": "#/$defs/item"}, "position": {"type": ["number", "null"]},
+                          "duration": {"type": ["number", "null"]}, "reason": {"enum": ["ended", "user", "error"]}}}}}},
+        {"if": {"properties": {"event": {"enum": ["segment_started", "segment_ended"]}}},
+         "then": {"properties": {"data": {"required": ["segment", "item"],
+           "properties": {"segment": {"enum": ["intro", "outro", "recap", "preview", "commercial"]},
+                          "item": {"$ref": "#/$defs/item"}}}}}},
+        {"if": {"properties": {"event": {"const": "profile_changed"}}},
+         "then": {"properties": {"data": {"required": ["profile"],
+           "properties": {"profile": {"oneOf": [{"$ref": "#/$defs/profile"}, {"type": "null"}]}}}}}}
+      ]
+    },
+    "colors": {
+      "type": "object",
+      "required": ["type", "seq", "ts", "zones"],
+      "properties": {
+        "type": {"const": "colors"},
+        "seq": {"type": "integer", "minimum": 1},
+        "ts": {"$ref": "#/$defs/epoch_ms"},
+        "zones": {
+          "type": "object",
+          "required": ["left", "right", "top", "bottom", "center", "average"],
+          "properties": {
+            "left": {"$ref": "#/$defs/rgb"}, "right": {"$ref": "#/$defs/rgb"},
+            "top": {"$ref": "#/$defs/rgb"}, "bottom": {"$ref": "#/$defs/rgb"},
+            "center": {"$ref": "#/$defs/rgb"}, "average": {"$ref": "#/$defs/rgb"}
+          }
+        }
+      }
+    }
+  }
+}

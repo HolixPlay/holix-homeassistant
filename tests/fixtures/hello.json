@@ -1,0 +1,21 @@
+{
+  "type": "hello",
+  "proto": 1,
+  "device": {
+    "id": "5b0c1d9e-3f0a-4c55-9a43-1f0e2b7a9c10",
+    "name": "Living Room Apple TV",
+    "model": "AppleTV14,1",
+    "platform": "tvos",
+    "app_version": "0.4.0 (57)"
+  },
+  "nonce": "bm9uY2UtMDAwMDAwMDAwMA",
+  "capabilities": [
+    "playback",
+    "profiles",
+    "ambilight",
+    "colors",
+    "notify",
+    "keys",
+    "play_item"
+  ]
+}

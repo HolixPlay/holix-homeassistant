@@ -1,0 +1,8 @@
+{
+  "type": "command",
+  "id": 10,
+  "command": "select_profile",
+  "args": {
+    "profile_id": "p-kids"
+  }
+}

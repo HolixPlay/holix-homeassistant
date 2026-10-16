@@ -1,0 +1,199 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Add Holix Play device",
+        "description": "Enter the address of the device running Holix Play. Holix Play must be open; a pairing code will appear on its screen.",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        }
+      },
+      "zeroconf_confirm": {
+        "title": "Holix Play found",
+        "description": "Add {name} to Home Assistant? A pairing code will appear on its screen."
+      },
+      "pair": {
+        "title": "Pair",
+        "description": "Enter the 6-digit code shown on {name}.",
+        "data": {
+          "pin": "Pairing code"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Pair again",
+        "description": "{name} no longer accepts this Home Assistant (pairing was removed in the app). Open Holix Play and continue; a new code will appear."
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect. Is Holix Play open and on the same network?",
+      "protocol": "The device did not speak the Holix protocol (or the app is newer than this integration).",
+      "invalid_pin": "Wrong code.",
+      "pin_expired": "The code expired; a new one is shown on the screen.",
+      "too_many_attempts": "Too many wrong attempts; a new code is shown on the screen.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "Device is already configured.",
+      "cannot_connect": "Cannot connect. Is Holix Play open and on the same network?",
+      "invalid_discovery": "Discovery data is incomplete.",
+      "unsupported_version": "Holix Play on this device is newer than the integration; update the integration.",
+      "reauth_successful": "Paired again.",
+      "wrong_device": "This is a different device."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Use Home Assistant lights as ambilight",
+        "description": "Selected lights follow the screen colors while Holix Play is playing. Hue/Zigbee lights can take only a few updates per second, so this is a soft ambient effect; for real ambilight use WLED / Holix Light directly in the app.",
+        "data": {
+          "lights": "Lights",
+          "ambient_fps": "Updates per second"
+        }
+      },
+      "zones": {
+        "title": "Screen zone per light",
+        "description": "Which part of the screen should each light follow?"
+      }
+    }
+  },
+  "selector": {
+    "zone": {
+      "options": {
+        "average": "Whole screen",
+        "left": "Left edge",
+        "right": "Right edge",
+        "top": "Top edge",
+        "bottom": "Bottom edge",
+        "center": "Center"
+      }
+    }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "playback_started": "Playback started",
+      "playback_paused": "Playback paused",
+      "playback_resumed": "Playback resumed",
+      "playback_stopped": "Playback stopped",
+      "segment_started": "Segment started",
+      "segment_ended": "Segment ended",
+      "profile_changed": "Profile changed",
+      "screensaver_started": "Screensaver started",
+      "screensaver_stopped": "Screensaver stopped"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "profile": {
+        "name": "Profile"
+      },
+      "media_kind": {
+        "name": "Media type",
+        "state": {
+          "none": "Nothing",
+          "movie": "Movie",
+          "episode": "Episode",
+          "trailer": "Trailer",
+          "music_video": "Music video",
+          "live_tv": "Live TV",
+          "audio": "Audio",
+          "video": "Video",
+          "other": "Other"
+        }
+      },
+      "dynamic_range": {
+        "name": "Dynamic range",
+        "state": {
+          "none": "None",
+          "sdr": "SDR",
+          "hdr10": "HDR10",
+          "hdr10_plus": "HDR10+",
+          "dolby_vision": "Dolby Vision",
+          "hlg": "HLG"
+        }
+      },
+      "segment": {
+        "name": "Segment",
+        "state": {
+          "none": "None",
+          "intro": "Intro",
+          "outro": "Credits",
+          "recap": "Recap",
+          "preview": "Preview",
+          "commercial": "Commercial"
+        }
+      },
+      "video_resolution": {
+        "name": "Video resolution"
+      },
+      "audio_format": {
+        "name": "Audio format"
+      }
+    },
+    "binary_sensor": {
+      "hdr": {
+        "name": "HDR"
+      },
+      "screensaver": {
+        "name": "Screensaver"
+      }
+    },
+    "select": {
+      "profile_select": {
+        "name": "Profile"
+      }
+    },
+    "light": {
+      "ambilight": {
+        "name": "Ambilight"
+      }
+    },
+    "remote": {
+      "remote": {
+        "name": "Navigation"
+      }
+    },
+    "event": {
+      "playback_event": {
+        "name": "Playback",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "playback_started": "Playback started",
+              "playback_paused": "Playback paused",
+              "playback_resumed": "Playback resumed",
+              "playback_stopped": "Playback stopped",
+              "segment_started": "Segment started",
+              "segment_ended": "Segment ended",
+              "profile_changed": "Profile changed",
+              "screensaver_started": "Screensaver started",
+              "screensaver_stopped": "Screensaver stopped"
+            }
+          }
+        }
+      }
+    }
+  },
+  "services": {
+    "show_notification": {
+      "name": "Show notification",
+      "description": "Shows a message on the Holix Play screen without stopping playback.",
+      "fields": {
+        "message": {
+          "name": "Message",
+          "description": "Text to show."
+        },
+        "title": {
+          "name": "Title",
+          "description": "Optional heading."
+        },
+        "duration": {
+          "name": "Duration",
+          "description": "Seconds on screen (1–60)."
+        }
+      }
+    }
+  }
+}

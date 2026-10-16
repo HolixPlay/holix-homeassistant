@@ -1,0 +1,9 @@
+{
+  "type": "result",
+  "id": 13,
+  "success": false,
+  "error": {
+    "code": "not_supported",
+    "message": "the app does not control tvOS volume"
+  }
+}

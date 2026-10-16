@@ -1,0 +1,48 @@
+{
+  "type": "state",
+  "state": {
+    "playback": {
+      "state": "idle",
+      "position": null,
+      "duration": null,
+      "position_at": null,
+      "rate": 1.0,
+      "item": null,
+      "video": null,
+      "audio": null,
+      "subtitle": null,
+      "segment": null,
+      "play_method": null,
+      "volume": null,
+      "muted": false
+    },
+    "profile": {
+      "id": "p-alex",
+      "name": "Alex",
+      "kind": "adult"
+    },
+    "profiles": [
+      {
+        "id": "p-alex",
+        "name": "Alex",
+        "kind": "adult"
+      },
+      {
+        "id": "p-kids",
+        "name": "Kids",
+        "kind": "child"
+      },
+      {
+        "id": "p-guest",
+        "name": "Guest",
+        "kind": "guest"
+      }
+    ],
+    "ambilight": {
+      "on": false,
+      "brightness": 0.8,
+      "targets": 1
+    },
+    "screensaver": false
+  }
+}

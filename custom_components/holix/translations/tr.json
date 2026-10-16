@@ -1,0 +1,199 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Holix Play cihazı ekle",
+        "description": "Holix Play'in çalıştığı cihazın adresini girin. Holix Play açık olmalı; ekranında eşleştirme kodu çıkacak.",
+        "data": {
+          "host": "Adres",
+          "port": "Port"
+        }
+      },
+      "zeroconf_confirm": {
+        "title": "Holix Play bulundu",
+        "description": "{name} Home Assistant'a eklensin mi? Ekranında eşleştirme kodu çıkacak."
+      },
+      "pair": {
+        "title": "Eşleştir",
+        "description": "{name} ekranındaki 6 haneli kodu girin.",
+        "data": {
+          "pin": "Eşleştirme kodu"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Yeniden eşleştir",
+        "description": "{name} bu Home Assistant'ı artık kabul etmiyor (eşleşme uygulamada kaldırılmış). Holix Play'i açıp devam edin; yeni kod çıkacak."
+      }
+    },
+    "error": {
+      "cannot_connect": "Bağlanılamadı. Holix Play açık ve aynı ağda mı?",
+      "protocol": "Cihaz Holix protokolüyle yanıt vermedi (ya da uygulama bu entegrasyondan yeni).",
+      "invalid_pin": "Kod yanlış.",
+      "pin_expired": "Kodun süresi doldu; ekranda yenisi gösteriliyor.",
+      "too_many_attempts": "Çok fazla yanlış deneme; ekranda yeni kod gösteriliyor.",
+      "unknown": "Beklenmeyen hata."
+    },
+    "abort": {
+      "already_configured": "Cihaz zaten ekli.",
+      "cannot_connect": "Bağlanılamadı. Holix Play açık ve aynı ağda mı?",
+      "invalid_discovery": "Keşif bilgisi eksik.",
+      "unsupported_version": "Bu cihazdaki Holix Play entegrasyondan yeni; entegrasyonu güncelleyin.",
+      "reauth_successful": "Yeniden eşleştirildi.",
+      "wrong_device": "Bu başka bir cihaz."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Home Assistant ışıklarını ambilight yap",
+        "description": "Seçilen ışıklar Holix Play oynatırken ekran renklerini izler. Hue/Zigbee lambalar saniyede ancak birkaç güncelleme alır; bu yumuşak bir ortam efektidir. Gerçek ambilight için uygulamada WLED / Holix Light'ı doğrudan kullanın.",
+        "data": {
+          "lights": "Işıklar",
+          "ambient_fps": "Saniyedeki güncelleme"
+        }
+      },
+      "zones": {
+        "title": "Işık başına ekran bölgesi",
+        "description": "Her ışık ekranın hangi bölümünü izlesin?"
+      }
+    }
+  },
+  "selector": {
+    "zone": {
+      "options": {
+        "average": "Tüm ekran",
+        "left": "Sol kenar",
+        "right": "Sağ kenar",
+        "top": "Üst kenar",
+        "bottom": "Alt kenar",
+        "center": "Orta"
+      }
+    }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "playback_started": "Oynatma başladı",
+      "playback_paused": "Duraklatıldı",
+      "playback_resumed": "Devam edildi",
+      "playback_stopped": "Oynatma durdu",
+      "segment_started": "Kesit başladı",
+      "segment_ended": "Kesit bitti",
+      "profile_changed": "Profil değişti",
+      "screensaver_started": "Ekran koruyucu açıldı",
+      "screensaver_stopped": "Ekran koruyucu kapandı"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "profile": {
+        "name": "Profil"
+      },
+      "media_kind": {
+        "name": "İçerik türü",
+        "state": {
+          "none": "Yok",
+          "movie": "Film",
+          "episode": "Bölüm",
+          "trailer": "Fragman",
+          "music_video": "Müzik videosu",
+          "live_tv": "Canlı TV",
+          "audio": "Ses",
+          "video": "Video",
+          "other": "Diğer"
+        }
+      },
+      "dynamic_range": {
+        "name": "Dinamik aralık",
+        "state": {
+          "none": "Yok",
+          "sdr": "SDR",
+          "hdr10": "HDR10",
+          "hdr10_plus": "HDR10+",
+          "dolby_vision": "Dolby Vision",
+          "hlg": "HLG"
+        }
+      },
+      "segment": {
+        "name": "Bölüm kesiti",
+        "state": {
+          "none": "Yok",
+          "intro": "Giriş",
+          "outro": "Jenerik",
+          "recap": "Önceki bölümlerde",
+          "preview": "Fragman",
+          "commercial": "Reklam"
+        }
+      },
+      "video_resolution": {
+        "name": "Video çözünürlüğü"
+      },
+      "audio_format": {
+        "name": "Ses biçimi"
+      }
+    },
+    "binary_sensor": {
+      "hdr": {
+        "name": "HDR"
+      },
+      "screensaver": {
+        "name": "Ekran koruyucu"
+      }
+    },
+    "select": {
+      "profile_select": {
+        "name": "Profil"
+      }
+    },
+    "light": {
+      "ambilight": {
+        "name": "Ambilight"
+      }
+    },
+    "remote": {
+      "remote": {
+        "name": "Gezinme"
+      }
+    },
+    "event": {
+      "playback_event": {
+        "name": "Oynatma",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "playback_started": "Oynatma başladı",
+              "playback_paused": "Duraklatıldı",
+              "playback_resumed": "Devam edildi",
+              "playback_stopped": "Oynatma durdu",
+              "segment_started": "Kesit başladı",
+              "segment_ended": "Kesit bitti",
+              "profile_changed": "Profil değişti",
+              "screensaver_started": "Ekran koruyucu açıldı",
+              "screensaver_stopped": "Ekran koruyucu kapandı"
+            }
+          }
+        }
+      }
+    }
+  },
+  "services": {
+    "show_notification": {
+      "name": "Bildirim göster",
+      "description": "Holix Play ekranında oynatmayı durdurmadan mesaj gösterir.",
+      "fields": {
+        "message": {
+          "name": "Mesaj",
+          "description": "Gösterilecek metin."
+        },
+        "title": {
+          "name": "Başlık",
+          "description": "İsteğe bağlı başlık."
+        },
+        "duration": {
+          "name": "Süre",
+          "description": "Ekranda kalma süresi (1–60 sn)."
+        }
+      }
+    }
+  }
+}
